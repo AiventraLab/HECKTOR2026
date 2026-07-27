@@ -6,7 +6,7 @@
 
 ## Abstract
 
-We present a unified deep learning pipeline for the HECKTOR 2026 challenge, jointly addressing head and neck (H&N) tumor segmentation, T/N staging, and relapse-free survival (RFS) prognosis from PET/CT imaging. Our framework chains three specialized modules: (1) a multi-architecture segmentation ensemble combining nnU-Net ResEnc-M and SegResNetDS with deep supervision and eight-flip test-time augmentation (TTA); (2) a novel FeatureGroupMamba architecture that models cross-group interactions among geometric, radiomic, and clinical features for TN staging; and (3) a rank-averaged ensemble of Random Survival Forest, Gradient-Boosted Survival, and Cox Proportional Hazards for continuous risk scoring. The entire pipeline is designed for robustness under limited VRAM (16 GB T4) and degrades gracefully on failure. Our ablation studies confirm that heterogeneous ensemble diversity and feature grouping are the primary performance levers.
+We present a unified deep learning pipeline for the HECKTOR 2026 challenge, jointly addressing head and neck (H&N) tumor segmentation, T/N staging, and relapse-free survival (RFS) prognosis from PET/CT imaging. Our framework chains three specialized modules: (1) a multi-architecture segmentation ensemble combining nnU-Net ResEnc-M and SegResNetDS with deep supervision and eight-flip test-time augmentation (TTA); (2) a novel FeatureGroupMamba architecture that models cross-group interactions among geometric, radiomic, and clinical features for TN staging; and (3) a rank-averaged ensemble of Random Survival Forest, Gradient-Boosted Survival, and Cox Proportional Hazards for continuous risk scoring. The entire pipeline is designed for robustness under limited VRAM (RTX 3090 24 GB) and degrades gracefully on failure. Our ablation studies confirm that heterogeneous ensemble diversity and feature grouping are the primary performance levers.
 
 **Keywords**: HECKTOR challenge, PET/CT, head and neck cancer, segmentation, TN staging, survival prediction, Mamba, ensemble learning
 
@@ -21,7 +21,7 @@ We propose a unified end-to-end pipeline that explicitly models this chain. Our 
 1. A **heterogeneous segmentation ensemble** (nnU-Net ResEnc-M + SegResNetDS) with architecture diversity as the primary robustness lever, post-processed by an SUV-thresholded node filter and equipped with an adaptive fallback when one arm fails.
 2. **FeatureGroupMamba**, a novel grouped-token Mamba architecture for TN staging that treats geometric, radiomic (GTVp/GTVn), and clinical feature sets as separate tokens, enabling the model to learn cross-group interactions beneficial for ordinal cancer staging.
 3. A **rank-averaged survival ensemble** (RSF + Gradient-Boosted Survival + CoxPH) with skill-weighted blending, demonstrating that simplicity and heterogeneity outperform single complex models.
-4. A **memory-hardened, fail-safe inference container** optimized for 16 GB VRAM, with PET-to-CT registration, H&N ROI cropping, and safe defaults ensuring the pipeline never crashes a Grand Challenge case.
+4. A **memory-hardened, fail-safe inference container** optimized for 24 GB VRAM, with PET-to-CT registration, H&N ROI cropping, and safe defaults ensuring the pipeline never crashes a Grand Challenge case.
 
 ---
 
@@ -203,7 +203,7 @@ We presented a unified, robust, and memory-efficient pipeline for the HECKTOR 20
 
 ### A.1 Environment
 - Framework: PyTorch 2.1+, MONAI 1.3+
-- Target hardware: NVIDIA T4 (16 GB VRAM / 16 GB DRAM)
+- Target hardware: NVIDIA RTX 3090 (24 GB VRAM)
 - Memory hardening: `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True`, `OMP_NUM_THREADS=4`, `MKL_NUM_THREADS=4`
 
 ### A.2 Contact
