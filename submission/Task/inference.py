@@ -2,16 +2,15 @@
 HECKTOR 2026 Challenge — Inference Entry Point
 
 Pipeline:
-  1. Segmentation: nnU-Net ResEnc-M (val Dice 0.726) → output.mha (CT geometry)
-  2. TN Staging:   LightGBM → t-stage.json, n-stage.json
-  3. Prognosis:    Cox → rfs.json
+   1. Segmentation: nnU-Net ResEnc-M + SegResNetDS softmax ensemble (w_nn=0.7, w_sr=0.3) → output.mha
+   2. TN Staging:   FeatureGroupMamba 5-seed ensemble → t-stage.json, n-stage.json
+   3. Prognosis:    RSF + Cox + GBS rank-average ensemble (skill-weighted) → rfs.json
 
 Feature extraction and clinical encoding match training exactly:
   - PET registered to CT, both resampled to 1mm isotropic
-  - Geometric/SUV features from hecktor/features.py::geometric_features()
-  - Clinical encoding from hecktor/columns.py::encode_clinical()
-    (one-hot + _missing indicators, fillna 0.0 — same as 04_train_tn.py)
-  - Cox uses raw numeric clinical (same as 05_train_prognosis.py)
+  - Geometric/SUV features from pipeline.py::geometric_features()
+  - Clinical encoding from pipeline.py::_encode_ehr()
+  - Cohort-aware safe defaults on any failure
 """
 import json
 import os
@@ -117,10 +116,10 @@ def run():
     try:
         rfs = float(run_prognosis(geo, ehr))
         if not np.isfinite(rfs):
-            rfs = 0.0
+            rfs = 1000.0
     except Exception as e:
-        print(f"[prognosis] FAILED ({e}); defaulting 0.0", flush=True)
-        rfs = 0.0
+        print(f"[prognosis] FAILED ({e}); defaulting 1000.0", flush=True)
+        rfs = 1000.0
     _write_json(OUTPUT_PATH / "rfs.json", rfs)
     print(f"[prognosis] rfs={rfs:.4f}", flush=True)
 
@@ -376,7 +375,7 @@ def run_tn_staging(geo, ehr):
 
     X = {**geo, **clin}
 
-    bundle = torch.load(MODEL_PATH / "ensemble.pth", map_location="cpu", weights_only=False)
+    bundle = torch.load(MODEL_PATH / "mamba_tn_ensemble.pth", map_location="cpu", weights_only=False)
     gdim = bundle["gdim"]
     seeds = bundle["seeds"]
     T_CLS = bundle["T_CLS"]
