@@ -1,0 +1,8 @@
+experiment_name: segresnet
+init_filters: 32
+blocks_down: [1, 2, 2, 4]
+spatial_size: [192, 192, 192]
+batch_size: 1
+learning_rate: 2.0e-4
+weight_decay: 1.0e-5
+num_epochs: 300

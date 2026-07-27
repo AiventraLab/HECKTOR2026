@@ -1,0 +1,5 @@
+d_model: 64
+dropout: 0.3
+num_t_classes: 4
+num_n_classes: 4
+seeds: [42, 123, 456]

@@ -1,0 +1,3 @@
+n_estimators: 50
+aggregation_method: mean
+random_state: 42

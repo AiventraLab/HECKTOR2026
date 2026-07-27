@@ -1,0 +1,11 @@
+torch
+monai
+nnunetv2
+SimpleITK
+scikit-image
+numpy
+scipy
+pandas
+lightgbm
+scikit-learn
+joblib

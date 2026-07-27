@@ -1,0 +1,10 @@
+experiment_name: mednext_l
+in_channels: 2
+out_channels: 3
+kernel_size: 5
+dim: 32
+spatial_size: [128, 128, 128]
+batch_size: 2
+learning_rate: 1.0e-4
+weight_decay: 1.0e-5
+num_epochs: 500

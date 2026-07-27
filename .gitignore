@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+venv/
+.env
+.eggs/
+*.egg-info/
+dist/
+build/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Data / outputs
+work/
+outputs/
+experiments/
+logs/
+figures/
+hpo_results/
+fold_logs_*/
+wandb/
+*.log
+*.db
+*.sqlite
+
+# Documentation drafts
+docs/
+
+# System
+.DS_Store
+Thumbs.db
