@@ -35,6 +35,7 @@ wandb/
 
 # Documentation drafts
 docs/
+*.md
 
 # System
 .DS_Store
